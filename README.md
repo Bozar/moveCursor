@@ -1,4 +1,4 @@
-foldmarker
+movecursor
 ==========
 
-foldmarker.vim
+movecursor.vim
