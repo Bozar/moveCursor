@@ -20,13 +20,4 @@ function KeepPos_MoveCursor(when) "{{{
 
 endfunction "}}}
 
-function FoldBegin_MoveCursor() "{{{
-
-	if substitute(getline('.'),
-		\'{\{3}\d\{0,2}$','','') != getline('.')
-		+1
-	endif
-
-endfunction "}}}
-
  "}}}1
