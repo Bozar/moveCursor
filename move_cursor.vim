@@ -1,6 +1,6 @@
 " move cursor {{{1
 
-function KeepPos_MoveCursor(when) "{{{
+function move_cursor#KeepPos(when) "{{{
 
 	if a:when == 0
 		let g:CurrentCursor_MoveCursor
