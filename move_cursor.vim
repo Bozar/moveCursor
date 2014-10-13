@@ -1,4 +1,6 @@
-" move cursor {{{1
+" move cursor "{{{1
+
+" Last Update: Oct 13, Mon | 21:25:42 | 2014
 
 function move_cursor#KeepPos(when) "{{{
 
@@ -39,4 +41,34 @@ function move_cursor#Para_SetMarkJK() "{{{
 
 endfunction "}}}
 
+function move_cursor#Fold_SetMarkJK() "{{{
+
+	let l:line = line('.')
+	let l:save = &foldenable
+
+	set foldenable
+
+	execute l:line
+	let l:level = foldlevel(l:line)
+
+	if l:level == 0
+		let &foldenable = l:save
+		return 1
+	endif
+
+	execute 'normal [z'
+
+	if foldlevel('.') != l:level
+		execute l:line
+		mark j
+	else
+		mark j
+	endif
+
+	execute 'normal ]z'
+	mark k
+
+	let &foldenable = l:save
+
+endfunction "}}}
  "}}}1
