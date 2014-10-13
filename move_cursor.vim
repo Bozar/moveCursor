@@ -12,10 +12,29 @@ function move_cursor#KeepPos(when) "{{{
 	elseif a:when == 1
 		call setpos('.',
 		\g:TopCursor_MoveCursor)
-		exe 'normal zt'
+		execute 'normal zt'
 		call setpos('.',
 		\g:CurrentCursor_MoveCursor)
 
+	endif
+
+endfunction "}}}
+
+function move_cursor#Para_SetMarkJK() "{{{
+
+	if line("'{") == 1
+		'{
+		mark j
+		" } bracket pair
+	else
+		'{+1
+		mark j
+		" } bracket pair
+	endif
+	if line("'}") == line('$')
+		'}mark k
+	else
+		'}-1mark k
 	endif
 
 endfunction "}}}
