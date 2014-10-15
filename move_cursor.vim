@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Oct 14, Tue | 08:03:50 | 2014
+" Last Update: Oct 15, Wed | 16:36:56 | 2014
 
 function move_cursor#KeepPos(when) "{{{
 
@@ -24,7 +24,7 @@ endfunction "}}}
 
 function move_cursor#Para_SetMarkJK() "{{{
 
-	if line("'{") == 1
+	if getline("'{") != ''
 		'{
 		mark j
 		" } bracket pair
@@ -33,7 +33,7 @@ function move_cursor#Para_SetMarkJK() "{{{
 		mark j
 		" } bracket pair
 	endif
-	if line("'}") == line('$')
+	if getline("'}") != ''
 		'}mark k
 	else
 		'}-1mark k
@@ -52,16 +52,15 @@ function move_cursor#Fold_SetMarkJK() "{{{
 
 	if l:level == 0
 		let &foldenable = l:save
+		echo 'ERROR: Fold not found!'
 		return 1
 	endif
 
 	execute 'normal [z'
 	if foldlevel('.') != l:level
 		execute l:line
-		mark j
-	else
-		mark j
 	endif
+	mark j
 
 	execute 'normal ]z'
 	mark k
@@ -69,4 +68,19 @@ function move_cursor#Fold_SetMarkJK() "{{{
 	let &foldenable = l:save
 
 endfunction "}}}
+
+function move_cursor#DeteceMarkJK() "{{{
+
+	if line("'j") == 0
+		echo 'ERROR: Mark j not found!'
+		return 1
+	endif
+
+	if line("'k") == 0
+		echo 'ERROR: Mark k not found!'
+		return 2
+	endif
+
+endfunction "}}}
+
  "}}}1
