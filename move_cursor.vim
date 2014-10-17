@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Oct 15, Wed | 16:36:56 | 2014
+" Last Update: Oct 17, Fri | 17:39:54 | 2014
 
 function move_cursor#KeepPos(when) "{{{
 
@@ -22,7 +22,7 @@ function move_cursor#KeepPos(when) "{{{
 
 endfunction "}}}
 
-function move_cursor#Para_SetMarkJK() "{{{
+function move_cursor#SetMarkJK_Para() "{{{
 
 	if getline("'{") != ''
 		'{
@@ -41,7 +41,7 @@ function move_cursor#Para_SetMarkJK() "{{{
 
 endfunction "}}}
 
-function move_cursor#Fold_SetMarkJK() "{{{
+function move_cursor#SetMarkJK_Fold() "{{{
 
 	let l:line = line('.')
 	let l:save = &foldenable
