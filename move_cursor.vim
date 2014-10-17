@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Oct 17, Fri | 22:31:43 | 2014
+" Last Update: Oct 17, Fri | 23:11:16 | 2014
 
 " variables "{{{2
 
@@ -36,8 +36,6 @@ function move_cursor#KeepPos(when) "{{{3
 endfunction "}}}3
 
 function move_cursor#SetMarkJK_Para() "{{{3
-
-	call space#DelSpace_Trail()
 
 	if getline("'{") != ''
 		'{
