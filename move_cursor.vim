@@ -1,8 +1,21 @@
 " move cursor "{{{1
 
-" Last Update: Oct 17, Fri | 17:39:54 | 2014
+" Last Update: Oct 17, Fri | 22:31:43 | 2014
 
-function move_cursor#KeepPos(when) "{{{
+" variables "{{{2
+
+if !exists('g:Loaded_MoveCursor')
+	let g:Loaded_MoveCursor = 0
+endif
+if g:Loaded_MoveCursor > 0
+	finish
+endif
+let g:Loaded_MoveCursor = 1
+
+ "}}}2
+" functions {{{2
+
+function move_cursor#KeepPos(when) "{{{3
 
 	if a:when == 0
 		let g:CurrentCursor_MoveCursor
@@ -20,9 +33,11 @@ function move_cursor#KeepPos(when) "{{{
 
 	endif
 
-endfunction "}}}
+endfunction "}}}3
 
-function move_cursor#SetMarkJK_Para() "{{{
+function move_cursor#SetMarkJK_Para() "{{{3
+
+	call space#DelSpace_Trail()
 
 	if getline("'{") != ''
 		'{
@@ -39,9 +54,9 @@ function move_cursor#SetMarkJK_Para() "{{{
 		'}-1mark k
 	endif
 
-endfunction "}}}
+endfunction "}}}3
 
-function move_cursor#SetMarkJK_Fold() "{{{
+function move_cursor#SetMarkJK_Fold() "{{{3
 
 	let l:line = line('.')
 	let l:save = &foldenable
@@ -67,9 +82,9 @@ function move_cursor#SetMarkJK_Fold() "{{{
 
 	let &foldenable = l:save
 
-endfunction "}}}
+endfunction "}}}3
 
-function move_cursor#DeteceMarkJK() "{{{
+function move_cursor#DeteceMarkJK() "{{{3
 
 	if line("'j") == 0
 		echo 'ERROR: Mark j not found!'
@@ -81,6 +96,7 @@ function move_cursor#DeteceMarkJK() "{{{
 		return 2
 	endif
 
-endfunction "}}}
+endfunction "}}}3
 
- "}}}1
+ "}}}2
+" vim: set fdm=marker fdl=20 tw=50: "}}}1
