@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Oct 19, Sun | 13:23:32 | 2014
+" Last Update: Oct 19, Sun | 18:44:58 | 2014
 
 " functions {{{2
 
@@ -68,6 +68,13 @@ function move_cursor#SetMarkJK_Fold() "{{{3
 	mark k
 
 	let &foldenable = l:save
+
+endfunction "}}}3
+
+function move_cursor#SetMarkJK_Whole() "{{{3
+
+	1mark j
+	$mark k
 
 endfunction "}}}3
 
