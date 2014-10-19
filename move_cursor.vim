@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Oct 19, Sun | 18:44:58 | 2014
+" Last Update: Oct 19, Sun | 20:30:51 | 2014
 
 " functions {{{2
 
@@ -78,7 +78,7 @@ function move_cursor#SetMarkJK_Whole() "{{{3
 
 endfunction "}}}3
 
-function move_cursor#DeteceMarkJK() "{{{3
+function move_cursor#DetecetMarkJK() "{{{3
 
 	if line("'j") == 0
 		echo 'ERROR: Mark j not found!'
@@ -92,5 +92,10 @@ function move_cursor#DeteceMarkJK() "{{{3
 
 endfunction "}}}3
 
+function move_cursor#MoveToMark(mark) "{{{3
+
+	call setpos('.',[0,line(a:mark),1,0])
+
+endfunction "}}}3
  "}}}2
 " vim: set fdm=marker fdl=20 tw=50: "}}}1
