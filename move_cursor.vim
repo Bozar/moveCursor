@@ -1,18 +1,7 @@
 " move cursor "{{{1
 
-" Last Update: Oct 17, Fri | 23:11:16 | 2014
+" Last Update: Oct 19, Sun | 13:23:32 | 2014
 
-" variables "{{{2
-
-if !exists('g:Loaded_MoveCursor')
-	let g:Loaded_MoveCursor = 0
-endif
-if g:Loaded_MoveCursor > 0
-	finish
-endif
-let g:Loaded_MoveCursor = 1
-
- "}}}2
 " functions {{{2
 
 function move_cursor#KeepPos(when) "{{{3
