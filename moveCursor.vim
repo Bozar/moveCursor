@@ -1,15 +1,7 @@
 " move cursor "{{{1
 
-" Last Update: Nov 22, Sat | 20:44:39 | 2014
+" Last Update: Nov 22, Sat | 23:14:23 | 2014
 
-"TODO "{{{2
-
-"DetectLineNr
-"GetLineNr
-"SetLineRange
-"change mark JK to lineNr()
-
- "}}}2
 " functions "{{{2
 
 function moveCursor#DetectLineNr(id,echo) "{{{3
