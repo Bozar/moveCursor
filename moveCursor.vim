@@ -1,104 +1,151 @@
 " move cursor "{{{1
 
-" Last Update: Oct 19, Sun | 21:01:15 | 2014
+" Last Update: Nov 22, Sat | 13:26:08 | 2014
 
 " functions {{{2
 
-function move_cursor#KeepPos(when) "{{{3
+function moveCursor#KeepPos(when) "{{{3
 
-	if a:when == 0
-		let g:CurrentCursor_MoveCursor
-		\ = getpos('.')
-		let g:TopCursor_MoveCursor = getpos('w0')
-		call setpos('.',
-		\g:CurrentCursor_MoveCursor)
+    if a:when == 0
 
-	elseif a:when == 1
-		call setpos('.',
-		\g:TopCursor_MoveCursor)
-		execute 'normal zt'
-		call setpos('.',
-		\g:CurrentCursor_MoveCursor)
+        let g:CurrentCursor_MoveCursor
+        \ = getpos('.')
 
-	endif
+        let g:TopCursor_MoveCursor = getpos('w0')
 
-endfunction "}}}3
+        call setpos('.',
+        \g:CurrentCursor_MoveCursor)
 
-function move_cursor#SetMarkJK_Para() "{{{3
+    elseif a:when == 1
 
-	if getline("'{") != ''
-		'{
-		mark j
-		" } bracket pair
-	else
-		'{+1
-		mark j
-		" } bracket pair
-	endif
-	if getline("'}") != ''
-		'}mark k
-	else
-		'}-1mark k
-	endif
+        call setpos('.',
+        \g:TopCursor_MoveCursor)
+
+        execute 'normal zt'
+
+        call setpos('.',
+        \g:CurrentCursor_MoveCursor)
+
+    endif
 
 endfunction "}}}3
 
-function move_cursor#SetMarkJK_Fold() "{{{3
+function moveCursor#SetMarkJKPara() "{{{3
 
-	let l:line = line('.')
-	let l:save = &foldenable
+    if getline("'{") != ''
 
-	set foldenable
-	execute l:line
-	let l:level = foldlevel(l:line)
+        '{
+        mark j
+        " } bracket pair
 
-	if l:level == 0
-		let &foldenable = l:save
-		echo 'ERROR: Fold not found!'
-		return 1
-	endif
+    else
 
-	execute 'normal [z'
-	if foldlevel('.') != l:level
-		execute l:line
-	endif
-	mark j
+        '{+1
+        mark j
+        " } bracket pair
 
-	execute 'normal ]z'
-	mark k
+    endif
 
-	let &foldenable = l:save
+    if getline("'}") != ''
 
-endfunction "}}}3
+        '}mark k
 
-function move_cursor#SetMarkJK_Whole() "{{{3
+    else
 
-	1mark j
-	$mark k
+        '}-1mark k
+
+    endif
 
 endfunction "}}}3
 
-function move_cursor#DetecetMarkJK() "{{{3
+function moveCursor#SetMarkJKFold() "{{{3
 
-	if line("'j") == 0
-		echo 'ERROR: Mark j not found!'
-		return 1
-	endif
+    let l:line = line('.')
+    let l:save = &foldenable
 
-	if line("'k") == 0
-		echo 'ERROR: Mark k not found!'
-		return 2
-	endif
+    set foldenable
+    execute l:line
+    let l:level = foldlevel(l:line)
+
+    if moveCursor#DetectFold() == 1
+
+        let &foldenable = l:save
+        return 1
+
+    endif
+
+    call moveCursor#GotoFoldBegin()
+
+    mark j
+    execute 'normal ]z'
+    mark k
+
+    let &foldenable = l:save
 
 endfunction "}}}3
 
-function move_cursor#ToColumn1(line,mode) "{{{3
+function moveCursor#SetMarkJKWhole() "{{{3
 
-	if a:mode == 0
-		call setpos('.',[0,line(a:line),1,0])
-	elseif a:mode == 1
-		call setpos('.',[0,a:line,1,0])
-	endif
+    1mark j
+    $mark k
+
+endfunction "}}}3
+
+function moveCursor#DetectMarkJK() "{{{3
+
+    if line("'j") == 0
+
+        echo 'ERROR: Mark j not found!'
+        return 1
+
+    endif
+
+    if line("'k") == 0
+
+        echo 'ERROR: Mark k not found!'
+        return 2
+
+    endif
+
+endfunction "}}}3
+
+function moveCursor#DetectFold() "{{{3
+
+    if foldlevel('.') < 1
+
+        echo 'ERROR: Fold not found!'
+        return 1
+
+    endif
+
+endfunction "}}}3
+
+function moveCursor#GotoColumn1(line,mode) "{{{3
+
+    if a:mode == 'str'
+
+        call setpos('.',[0,line(a:line),1,0])
+
+    elseif a:mode == 'num'
+
+        call setpos('.',[0,a:line,1,0])
+
+    endif
+
+endfunction "}}}3
+
+function moveCursor#GotoFoldBegin() "{{{3
+
+    let l:line = line('.')
+    let l:level = foldlevel(l:line)
+
+    execute 'normal [z'
+
+    if foldlevel('.') != l:level
+
+        execute l:line
+
+    endif
 
 endfunction "}}}3
 
