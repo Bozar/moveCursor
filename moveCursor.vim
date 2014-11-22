@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Nov 22, Sat | 15:30:01 | 2014
+" Last Update: Nov 22, Sat | 20:44:39 | 2014
 
 "TODO "{{{2
 
@@ -38,14 +38,16 @@ function moveCursor#DetectLineNr(id,echo) "{{{3
 
 endfunction "}}}3
 
-function moveCursor#GetLineNr(id) "{{{3
+function moveCursor#GetLineNr(expr,id) "{{{3
 
     execute 'let g:LineNr' . a:id .
-    \ '_moveCursor =' . ' ' . line('.')
+    \ '_moveCursor =' . ' ' . line(a:expr)
 
 endfunction "}}}3
 
-function moveCursor#SetRange(from,to,...) "{{{3
+" SetRangeLine() "{{{3
+
+function moveCursor#SetLineRange(from,to,...)
 
     execute 'let l:from = g:LineNr' . a:from .
     \ '_moveCursor'
@@ -96,35 +98,35 @@ function moveCursor#KeepPos(when) "{{{3
 
 endfunction "}}}3
 
-function moveCursor#SetMarkJKPara() "{{{3
+function moveCursor#SetLineJKPara() "{{{3
 
     if getline("'{") != ''
 
         '{
-        mark j
+        call moveCursor#GetLineNr('.','J')
         " } bracket pair
 
     else
 
         '{+1
-        mark j
+        call moveCursor#GetLineNr('.','J')
         " } bracket pair
 
     endif
 
     if getline("'}") != ''
 
-        '}mark k
+        call moveCursor#GetLineNr("'}",'K')
 
     else
 
-        '}-1mark k
+        call moveCursor#GetLineNr("'}-1",'K')
 
     endif
 
 endfunction "}}}3
 
-function moveCursor#SetMarkJKFold() "{{{3
+function moveCursor#SetLineJKFold() "{{{3
 
     let l:line = line('.')
     let l:save = &foldenable
@@ -142,18 +144,21 @@ function moveCursor#SetMarkJKFold() "{{{3
 
     call moveCursor#GotoFoldBegin()
 
-    mark j
+    call moveCursor#GetLineNr('.','J')
+
     execute 'normal ]z'
-    mark k
+
+    call moveCursor#GetLineNr('.','K')
 
     let &foldenable = l:save
 
 endfunction "}}}3
 
-function moveCursor#SetMarkJKWhole() "{{{3
+function moveCursor#SetLineJKWhole() "{{{3
 
-    1mark j
-    $mark k
+    let g:LineNrJ_moveCursor = 1
+
+    call moveCursor#GetLineNr('$','K')
 
 endfunction "}}}3
 
