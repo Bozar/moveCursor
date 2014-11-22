@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Nov 22, Sat | 13:26:08 | 2014
+" Last Update: Nov 22, Sat | 13:43:24 | 2014
 
 " functions {{{2
 
@@ -8,23 +8,23 @@ function moveCursor#KeepPos(when) "{{{3
 
     if a:when == 0
 
-        let g:CurrentCursor_MoveCursor
+        let g:CurrentCursor_moveCursor
         \ = getpos('.')
 
-        let g:TopCursor_MoveCursor = getpos('w0')
+        let g:TopCursor_moveCursor = getpos('w0')
 
         call setpos('.',
-        \g:CurrentCursor_MoveCursor)
+        \ g:CurrentCursor_moveCursor)
 
     elseif a:when == 1
 
         call setpos('.',
-        \g:TopCursor_MoveCursor)
+        \ g:TopCursor_moveCursor)
 
         execute 'normal zt'
 
         call setpos('.',
-        \g:CurrentCursor_MoveCursor)
+        \ g:CurrentCursor_moveCursor)
 
     endif
 
