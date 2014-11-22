@@ -1,8 +1,74 @@
 " move cursor "{{{1
 
-" Last Update: Nov 22, Sat | 13:43:24 | 2014
+" Last Update: Nov 22, Sat | 15:30:01 | 2014
 
-" functions {{{2
+"TODO "{{{2
+
+"DetectLineNr
+"GetLineNr
+"SetLineRange
+"change mark JK to lineNr()
+
+ "}}}2
+" functions "{{{2
+
+function moveCursor#DetectLineNr(id,echo) "{{{3
+
+    let l:LineNr =
+    \ 'g:LineNr' . a:id . '_moveCursor'
+
+    let l:error = 'ERROR:' . ' ' . l:LineNr
+    let l:error .= " doens't exist!"
+
+    if !exists(l:LineNr)
+
+        if a:echo > 0
+
+            echo l:error
+
+        endif
+
+        return 1
+
+    else
+
+        return 0
+
+    endif
+
+endfunction "}}}3
+
+function moveCursor#GetLineNr(id) "{{{3
+
+    execute 'let g:LineNr' . a:id .
+    \ '_moveCursor =' . ' ' . line('.')
+
+endfunction "}}}3
+
+function moveCursor#SetRange(from,to,...) "{{{3
+
+    execute 'let l:from = g:LineNr' . a:from .
+    \ '_moveCursor'
+
+    execute 'let l:to = g:LineNr' . a:to .
+    \ '_moveCursor'
+
+    if exists('a:1')
+
+        let l:from = l:from + a:1
+
+    endif
+
+    if exists('a:2')
+
+        let l:to = l:to + a:2
+
+    endif
+
+    let g:LineRange_moveCursor =
+    \ l:from . ',' . l:to
+
+endfunction "}}}3
 
 function moveCursor#KeepPos(when) "{{{3
 
