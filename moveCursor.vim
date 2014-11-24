@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Nov 22, Sat | 23:14:23 | 2014
+" Last Update: Nov 24, Mon | 09:39:11 | 2014
 
 " functions "{{{2
 
@@ -59,8 +59,19 @@ function moveCursor#SetLineRange(from,to,...)
 
     endif
 
-    let g:LineRange_moveCursor =
-    \ l:from . ',' . l:to
+    let l:range = l:from . ',' . l:to
+
+    if exists('a:3')
+
+        exe 'let g:LineRange' . a:3 . '_moveCursor' .
+        \  ' =' . ' ' . string(l:range)
+
+    elseif !exists('a:3')
+
+        let g:LineRange_moveCursor =
+        \ l:range
+
+    endif
 
 endfunction "}}}3
 
