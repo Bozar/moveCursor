@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Nov 28, Fri | 19:10:37 | 2014
+" Last Update: Nov 28, Fri | 21:24:30 | 2014
 
 " functions "{{{2
 
@@ -31,7 +31,7 @@ endfunction "}}}3
 
 function moveCursor#SetLineNr(expr,id) "{{{3
 
-    if type(a:expr) == type('string')
+    if type(a:expr) == type('str')
 
         execute 'let s:LineNr' . a:id . ' =' .
         \ ' ' . line(a:expr)
@@ -211,17 +211,9 @@ endfunction "}}}3
 
 function moveCursor#GotoColumnEnd(line) "{{{3
 
-    if type(a:line) == type('str')
+    call moveCursor#GotoColumn1(a:line)
 
-        call setpos('.',[0,line(a:line),
-        \ search('$','c',line(a:line)),0])
-
-    elseif type(a:line) == type(1)
-
-        call setpos('.',[0,a:line,
-        \ search('$','c',a:line),0])
-
-    endif
+    call search('$','c',line('.'))
 
 endfunction "}}}3
 
@@ -277,7 +269,7 @@ function moveCursor#SearchInLine(pat,move) "{{{3
 
                     call
                     \ moveCursor#GotoColumnEnd(
-                    \ '.','str')
+                    \ '.')
 
                 endif
 
@@ -285,13 +277,15 @@ function moveCursor#SearchInLine(pat,move) "{{{3
 
                 call setpos('.',l:cursor)
 
+                return 2
+
             endif
 
             let l:i = l:i + 1
 
         else
 
-            break
+            return 1
 
         endif
 
