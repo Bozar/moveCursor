@@ -1,6 +1,6 @@
 " move cursor "{{{1
 
-" Last Update: Nov 27, Thu | 22:55:18 | 2014
+" Last Update: Nov 28, Fri | 12:33:22 | 2014
 
 " functions "{{{2
 
@@ -37,7 +37,7 @@ function moveCursor#GetLineNr(expr,id) "{{{3
 
 endfunction "}}}3
 
-" SetRangeLine() "{{{3
+" SetLineRange() "{{{3
 
 function moveCursor#SetLineRange(from,to,...)
 
@@ -63,7 +63,8 @@ function moveCursor#SetLineRange(from,to,...)
 
     if exists('a:3')
 
-        exe 'let g:LineRange' . a:3 . '_moveCursor' .
+        exe 'let g:LineRange' . a:3 .
+        \ '_moveCursor' .
         \  ' =' . ' ' . string(l:range)
 
     elseif !exists('a:3')
@@ -79,23 +80,19 @@ function moveCursor#KeepPos(when) "{{{3
 
     if a:when == 0
 
-        let g:CurrentCursor_moveCursor
-        \ = getpos('.')
+        let s:CursorCurrent = getpos('.')
 
-        let g:TopCursor_moveCursor = getpos('w0')
+        let s:CursorTop = getpos('w0')
 
-        call setpos('.',
-        \ g:CurrentCursor_moveCursor)
+        call setpos('.',s:CursorCurrent)
 
     elseif a:when == 1
 
-        call setpos('.',
-        \ g:TopCursor_moveCursor)
+        call setpos('.',s:CursorTop)
 
         execute 'normal zt'
 
-        call setpos('.',
-        \ g:CurrentCursor_moveCursor)
+        call setpos('.',s:CursorCurrent)
 
     endif
 
