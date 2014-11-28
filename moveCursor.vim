@@ -1,13 +1,25 @@
 " move cursor "{{{1
 
-" Last Update: Nov 28, Fri | 12:33:22 | 2014
+"TODO "{{{2
+
+" moveCursor.vim
+" bullet.vim
+" keymap_tmp.vim
+
+" g:LineRange
+" g:LineNr
+
+" moveToColumn1
+" moveToColumnEnd
+
+ "}}}2
+" Last Update: Nov 28, Fri | 17:38:41 | 2014
 
 " functions "{{{2
 
 function moveCursor#DetectLineNr(id,echo) "{{{3
 
-    let l:LineNr =
-    \ 'g:LineNr' . a:id . '_moveCursor'
+    let l:LineNr = 's:LineNr' . a:id
 
     let l:error = 'ERROR:' . ' ' . l:LineNr
     let l:error .= " doens't exist!"
@@ -30,22 +42,31 @@ function moveCursor#DetectLineNr(id,echo) "{{{3
 
 endfunction "}}}3
 
-function moveCursor#GetLineNr(expr,id) "{{{3
+function moveCursor#SetLineNr(expr,id) "{{{3
 
-    execute 'let g:LineNr' . a:id .
-    \ '_moveCursor =' . ' ' . line(a:expr)
+    if type(a:expr) == type('string')
+
+        execute 'let s:LineNr' . a:id . ' =' .
+        \ ' ' . line(a:expr)
+
+    elseif type(a:expr) == type(1)
+
+        execute 'let s:LineNr' . a:id . ' =' .
+        \ ' ' . a:expr
+
+    endif
 
 endfunction "}}}3
 
-" SetLineRange() "{{{3
+function moveCursor#TakeLineNr(from,to,...) "{{{3
 
-function moveCursor#SetLineRange(from,to,...)
+    execute 'let l:from = s:LineNr' . a:from
 
-    execute 'let l:from = g:LineNr' . a:from .
-    \ '_moveCursor'
+    if a:to != ''
 
-    execute 'let l:to = g:LineNr' . a:to .
-    \ '_moveCursor'
+        execute 'let l:to = s:LineNr' . a:to
+
+    endif
 
     if exists('a:1')
 
@@ -59,20 +80,17 @@ function moveCursor#SetLineRange(from,to,...)
 
     endif
 
-    let l:range = l:from . ',' . l:to
+    if exists('l:to')
 
-    if exists('a:3')
+        let l:range = l:from . ',' . l:to
 
-        exe 'let g:LineRange' . a:3 .
-        \ '_moveCursor' .
-        \  ' =' . ' ' . string(l:range)
+    elseif !exists('l:to')
 
-    elseif !exists('a:3')
-
-        let g:LineRange_moveCursor =
-        \ l:range
+        let l:range = l:from
 
     endif
+
+    return l:range
 
 endfunction "}}}3
 
@@ -103,24 +121,24 @@ function moveCursor#SetLineJKPara() "{{{3
     if getline("'{") != ''
 
         '{
-        call moveCursor#GetLineNr('.','J')
+        call moveCursor#SetLineNr('.','J')
         " } bracket pair
 
     else
 
         '{+1
-        call moveCursor#GetLineNr('.','J')
+        call moveCursor#SetLineNr('.','J')
         " } bracket pair
 
     endif
 
     if getline("'}") != ''
 
-        call moveCursor#GetLineNr("'}",'K')
+        call moveCursor#SetLineNr("'}",'K')
 
     else
 
-        call moveCursor#GetLineNr("'}-1",'K')
+        call moveCursor#SetLineNr("'}-1",'K')
 
     endif
 
@@ -144,11 +162,11 @@ function moveCursor#SetLineJKFold() "{{{3
 
     call moveCursor#GotoFoldBegin()
 
-    call moveCursor#GetLineNr('.','J')
+    call moveCursor#SetLineNr('.','J')
 
     execute 'normal ]z'
 
-    call moveCursor#GetLineNr('.','K')
+    call moveCursor#SetLineNr('.','K')
 
     let &foldenable = l:save
 
@@ -156,9 +174,8 @@ endfunction "}}}3
 
 function moveCursor#SetLineJKWhole() "{{{3
 
-    let g:LineNrJ_moveCursor = 1
-
-    call moveCursor#GetLineNr('$','K')
+    call moveCursor#SetLineNr(1,'J')
+    call moveCursor#SetLineNr('$','K')
 
 endfunction "}}}3
 
