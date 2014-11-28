@@ -1,19 +1,6 @@
 " move cursor "{{{1
 
-"TODO "{{{2
-
-" moveCursor.vim
-" bullet.vim
-" keymap_tmp.vim
-
-" g:LineRange
-" g:LineNr
-
-" moveToColumn1
-" moveToColumnEnd
-
- "}}}2
-" Last Update: Nov 28, Fri | 17:38:41 | 2014
+" Last Update: Nov 28, Fri | 19:10:37 | 2014
 
 " functions "{{{2
 
@@ -208,13 +195,13 @@ function moveCursor#DetectFold() "{{{3
 
 endfunction "}}}3
 
-function moveCursor#GotoColumn1(line,mode) "{{{3
+function moveCursor#GotoColumn1(line) "{{{3
 
-    if a:mode == 'str'
+    if type(a:line) == type('str')
 
         call setpos('.',[0,line(a:line),1,0])
 
-    elseif a:mode == 'num'
+    elseif type(a:line) == type(1)
 
         call setpos('.',[0,a:line,1,0])
 
@@ -222,14 +209,14 @@ function moveCursor#GotoColumn1(line,mode) "{{{3
 
 endfunction "}}}3
 
-function moveCursor#GotoColumnEnd(line,mode) "{{{3
+function moveCursor#GotoColumnEnd(line) "{{{3
 
-    if a:mode == 'str'
+    if type(a:line) == type('str')
 
         call setpos('.',[0,line(a:line),
         \ search('$','c',line(a:line)),0])
 
-    elseif a:mode == 'num'
+    elseif type(a:line) == type(1)
 
         call setpos('.',[0,a:line,
         \ search('$','c',a:line),0])
@@ -284,8 +271,7 @@ function moveCursor#SearchInLine(pat,move) "{{{3
                 if a:move == 'f' || a:move == ''
 
                     call
-                    \ moveCursor#GotoColumn1(
-                    \ '.','str')
+                    \ moveCursor#GotoColumn1('.')
 
                 elseif a:move == 'b'
 
