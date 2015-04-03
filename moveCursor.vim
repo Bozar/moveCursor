@@ -1,20 +1,19 @@
 " moveCursor.vim "{{{1
-" Last Update: Apr 03, Fri | 15:46:12 | 2015
+" Last Update: Apr 03, Fri | 17:24:59 | 2015
 
 " NOTE: script variables
-" s:LineNr . [id] . _moveCursor
-" s:PosCurrent_moveCursor
-" s:PosTop_moveCursor
+" s:LineNr . [id]
+" s:PosCurrent
+" s:PosTop
 
 function moveCursor#DetectLineNr(id,...) "{{{2
 
-    let l:LineNr = 's:LineNr' . a:id .
-    \ '_moveCursor'
+    let l:LineNr = 's:LineNr' . a:id
 
     if !exists(l:LineNr)
         if exists('a:1') && a:1 ># 0
             echo 'ERROR:' . ' ' . l:LineNr .
-            \ " doens't exist!"
+            \ " doens't exist in moveCursor.vim!"
         endif
         return 1
     else
@@ -89,13 +88,13 @@ endfunction "}}}2
 function moveCursor#KeepPos(when) "{{{2
 
     if a:when ==# 0
-        let s:PosCurrent_moveCursor = getpos('.')
-        let s:PosTop_moveCursor = getpos('w0')
-        call setpos('.',s:PosCurrent_moveCursor)
+        let s:PosCurrent = getpos('.')
+        let s:PosTop = getpos('w0')
+        call setpos('.',s:PosCurrent)
     elseif a:when ==# 1
-        call setpos('.',s:PosTop_moveCursor)
+        call setpos('.',s:PosTop)
         execute 'normal! zt'
-        call setpos('.',s:PosCurrent_moveCursor)
+        call setpos('.',s:PosCurrent)
     endif
 
 endfunction "}}}2
@@ -103,22 +102,20 @@ endfunction "}}}2
 function moveCursor#SetLineNr(expr,id) "{{{2
 
     if type(a:expr) ==# type('string')
-        execute 'let s:LineNr' . a:id .
-        \ '_moveCursor' . '=' . line(a:expr)
+        execute 'let s:LineNr' . a:id . '=' .
+        \ line(a:expr)
     elseif type(a:expr) ==# type(1)
-        execute 'let s:LineNr' . a:id .
-        \ '_moveCursor' . '=' . a:expr
+        execute 'let s:LineNr' . a:id . '=' .
+        \ a:expr
     endif
 
 endfunction "}}}2
 
 function moveCursor#TakeLineNr(from,to,...) "{{{2
 
-    execute 'let l:from = s:LineNr' . a:from .
-    \ '_moveCursor'
+    execute 'let l:from = s:LineNr' . a:from
     if a:to !=# ''
-        execute 'let l:to = s:LineNr' . a:to .
-        \ '_moveCursor'
+        execute 'let l:to = s:LineNr' . a:to
     endif
 
     if exists('a:1')
