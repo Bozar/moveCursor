@@ -1,5 +1,5 @@
 " moveCursor.vim "{{{1
-" Last Update: Apr 03, Fri | 17:24:59 | 2015
+" Last Update: Apr 03, Fri | 17:31:31 | 2015
 
 " NOTE: script variables
 " s:LineNr . [id]
@@ -13,7 +13,7 @@ function moveCursor#DetectLineNr(id,...) "{{{2
     if !exists(l:LineNr)
         if exists('a:1') && a:1 ># 0
             echo 'ERROR:' . ' ' . l:LineNr .
-            \ " doens't exist in moveCursor.vim!"
+            \ " doesn't exist in moveCursor.vim!"
         endif
         return 1
     else
