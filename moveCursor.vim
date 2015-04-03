@@ -1,5 +1,5 @@
 " moveCursor.vim "{{{1
-" Last Update: Apr 03, Fri | 17:31:31 | 2015
+" Last Update: Apr 03, Fri | 17:58:01 | 2015
 
 " NOTE: script variables
 " s:LineNr . [id]
@@ -180,9 +180,9 @@ function moveCursor#SetLineJKWhole(...) "{{{2
     endif
 
     if exists('a:2')
-        call moveCursor#SetLineNr(1,a:2)
+        call moveCursor#SetLineNr('$',a:2)
     else
-        call moveCursor#SetLineNr(1,'K')
+        call moveCursor#SetLineNr('$','K')
     endif
 
 endfunction "}}}2
