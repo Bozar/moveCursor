@@ -1,297 +1,193 @@
-" move cursor "{{{1
+" moveCursor.vim "{{{1
+" Last Update: Apr 03, Fri | 15:46:12 | 2015
 
-" Last Update: Nov 28, Fri | 21:24:30 | 2014
+" NOTE: script variables
+" s:LineNr . [id] . _moveCursor
+" s:PosCurrent_moveCursor
+" s:PosTop_moveCursor
 
-" functions "{{{2
+function moveCursor#DetectLineNr(id,...) "{{{2
 
-function moveCursor#DetectLineNr(id,echo) "{{{3
-
-    let l:LineNr = 's:LineNr' . a:id
-
-    let l:error = 'ERROR:' . ' ' . l:LineNr
-    let l:error .= " doens't exist!"
+    let l:LineNr = 's:LineNr' . a:id .
+    \ '_moveCursor'
 
     if !exists(l:LineNr)
-
-        if a:echo > 0
-
-            echo l:error
-
+        if exists('a:1') && a:1 ># 0
+            echo 'ERROR:' . ' ' . l:LineNr .
+            \ " doens't exist!"
         endif
-
         return 1
-
     else
-
-        return 0
-
+        return 2
     endif
 
-endfunction "}}}3
+endfunction "}}}2
 
-function moveCursor#SetLineNr(expr,id) "{{{3
+function moveCursor#DetectMark(id,...) "{{{2
 
-    if type(a:expr) == type('str')
+    let l:mark = "'" . a:id
 
-        execute 'let s:LineNr' . a:id . ' =' .
-        \ ' ' . line(a:expr)
-
-    elseif type(a:expr) == type(1)
-
-        execute 'let s:LineNr' . a:id . ' =' .
-        \ ' ' . a:expr
-
+    if line(l:mark) ==# 0
+        if exists('a:1') && a:1 ># 0
+            echo 'ERROR: Mark' . ' ' . l:mark .
+            \ ' not found!'
+        endif
+        return 1
+    else
+        return 2
     endif
 
-endfunction "}}}3
+endfunction "}}}2
 
-function moveCursor#TakeLineNr(from,to,...) "{{{3
+function moveCursor#DetectFold(...) "{{{2
 
-    execute 'let l:from = s:LineNr' . a:from
+    if foldlevel('.') <# 1
+        if exists('a:1') && a:1 ># 0
+            echo 'ERROR: Fold not found!'
+        endif
+        return 1
+    else
+        return 2
+    endif
 
-    if a:to != ''
+endfunction "}}}2
 
-        execute 'let l:to = s:LineNr' . a:to
+function moveCursor#GotoParaBegin() "{{{2
 
+    if getline('.') ==# ''
+        execute 'normal! }{+1'
+    elseif getline("'{") !=# ''
+        execute 'normal! {'
+    else
+        execute 'normal! {+1'
+    endif
+
+endfunction "}}}2
+
+function moveCursor#GotoParaEnd() "{{{2
+
+    if getline("'}") !=# ''
+        execute 'normal! }'
+    else
+        execute 'normal! }-1'
+    endif
+
+endfunction "}}}2
+
+function moveCursor#GotoFoldBegin() "{{{2
+
+    let l:line = line('.')
+    let l:level = foldlevel('.')
+
+    execute 'normal! [z'
+    if foldlevel('.') !=# l:level
+        execute l:line
+    endif
+
+endfunction "}}}2
+
+function moveCursor#KeepPos(when) "{{{2
+
+    if a:when ==# 0
+        let s:PosCurrent_moveCursor = getpos('.')
+        let s:PosTop_moveCursor = getpos('w0')
+        call setpos('.',s:PosCurrent_moveCursor)
+    elseif a:when ==# 1
+        call setpos('.',s:PosTop_moveCursor)
+        execute 'normal! zt'
+        call setpos('.',s:PosCurrent_moveCursor)
+    endif
+
+endfunction "}}}2
+
+function moveCursor#SetLineNr(expr,id) "{{{2
+
+    if type(a:expr) ==# type('string')
+        execute 'let s:LineNr' . a:id .
+        \ '_moveCursor' . '=' . line(a:expr)
+    elseif type(a:expr) ==# type(1)
+        execute 'let s:LineNr' . a:id .
+        \ '_moveCursor' . '=' . a:expr
+    endif
+
+endfunction "}}}2
+
+function moveCursor#TakeLineNr(from,to,...) "{{{2
+
+    execute 'let l:from = s:LineNr' . a:from .
+    \ '_moveCursor'
+    if a:to !=# ''
+        execute 'let l:to = s:LineNr' . a:to .
+        \ '_moveCursor'
     endif
 
     if exists('a:1')
-
         let l:from = l:from + a:1
-
     endif
-
     if exists('a:2')
-
         let l:to = l:to + a:2
-
     endif
 
     if exists('l:to')
-
         let l:range = l:from . ',' . l:to
-
     elseif !exists('l:to')
-
         let l:range = l:from
-
     endif
 
     return l:range
 
-endfunction "}}}3
+endfunction "}}}2
 
-function moveCursor#KeepPos(when) "{{{3
+function moveCursor#SetLineJKPara(...) "{{{2
 
-    if a:when == 0
-
-        let s:CursorCurrent = getpos('.')
-
-        let s:CursorTop = getpos('w0')
-
-        call setpos('.',s:CursorCurrent)
-
-    elseif a:when == 1
-
-        call setpos('.',s:CursorTop)
-
-        execute 'normal zt'
-
-        call setpos('.',s:CursorCurrent)
-
-    endif
-
-endfunction "}}}3
-
-function moveCursor#SetLineJKPara() "{{{3
-
-    if getline("'{") != ''
-
-        '{
-        call moveCursor#SetLineNr('.','J')
-        " } bracket pair
-
+    call moveCursor#GotoParaBegin()
+    if exists('a:1')
+        call moveCursor#SetLineNr('.',a:1)
     else
-
-        '{+1
         call moveCursor#SetLineNr('.','J')
-        " } bracket pair
-
     endif
 
-    if getline("'}") != ''
-
-        call moveCursor#SetLineNr("'}",'K')
-
+    call moveCursor#GotoParaEnd()
+    if exists('a:2')
+        call moveCursor#SetLineNr('.',a:2)
     else
-
-        call moveCursor#SetLineNr("'}-1",'K')
-
+        call moveCursor#SetLineNr('.','K')
     endif
 
-endfunction "}}}3
+endfunction "}}}2
 
-function moveCursor#SetLineJKFold() "{{{3
-
-    let l:line = line('.')
-    let l:save = &foldenable
-
-    set foldenable
-    execute l:line
-    let l:level = foldlevel(l:line)
-
-    if moveCursor#DetectFold() == 1
-
-        let &foldenable = l:save
-        return 1
-
-    endif
+function moveCursor#SetLineJKFold(...) "{{{2
 
     call moveCursor#GotoFoldBegin()
-
-    call moveCursor#SetLineNr('.','J')
-
-    execute 'normal ]z'
-
-    call moveCursor#SetLineNr('.','K')
-
-    let &foldenable = l:save
-
-endfunction "}}}3
-
-function moveCursor#SetLineJKWhole() "{{{3
-
-    call moveCursor#SetLineNr(1,'J')
-    call moveCursor#SetLineNr('$','K')
-
-endfunction "}}}3
-
-function moveCursor#DetectMarkJK() "{{{3
-
-    if line("'j") == 0
-
-        echo 'ERROR: Mark j not found!'
-        return 1
-
+    if exists('a:1')
+        call moveCursor#SetLineNr('.',a:1)
+    else
+        call moveCursor#SetLineNr('.','J')
     endif
 
-    if line("'k") == 0
-
-        echo 'ERROR: Mark k not found!'
-        return 2
-
+    execute 'normal! ]z'
+    if exists('a:2')
+        call moveCursor#SetLineNr('.',a:2)
+    else
+        call moveCursor#SetLineNr('.','K')
     endif
 
-endfunction "}}}3
+endfunction "}}}2
 
-function moveCursor#DetectFold() "{{{3
+function moveCursor#SetLineJKWhole(...) "{{{2
 
-    if foldlevel('.') < 1
-
-        echo 'ERROR: Fold not found!'
-        return 1
-
+    if exists('a:1')
+        call moveCursor#SetLineNr(1,a:1)
+    else
+        call moveCursor#SetLineNr(1,'J')
     endif
 
-endfunction "}}}3
-
-function moveCursor#GotoColumn1(line) "{{{3
-
-    if type(a:line) == type('str')
-
-        call setpos('.',[0,line(a:line),1,0])
-
-    elseif type(a:line) == type(1)
-
-        call setpos('.',[0,a:line,1,0])
-
+    if exists('a:2')
+        call moveCursor#SetLineNr(1,a:2)
+    else
+        call moveCursor#SetLineNr(1,'K')
     endif
 
-endfunction "}}}3
+endfunction "}}}2
 
-function moveCursor#GotoColumnEnd(line) "{{{3
-
-    call moveCursor#GotoColumn1(a:line)
-
-    call search('$','c',line('.'))
-
-endfunction "}}}3
-
-function moveCursor#GotoFoldBegin() "{{{3
-
-    let l:line = line('.')
-    let l:level = foldlevel(l:line)
-
-    execute 'normal [z'
-
-    if foldlevel('.') != l:level
-
-        execute l:line
-
-    endif
-
-endfunction "}}}3
-
-function moveCursor#SearchInLine(pat,move) "{{{3
-
-    if a:move == 'f' || a:move == ''
-
-        let l:noCursorPos = 'W'
-        let l:cursorPos = 'cW'
-
-    elseif a:move == 'b'
-
-        let l:noCursorPos = 'bW'
-        let l:cursorPos = 'bcW'
-
-    endif
-
-    let l:i = 0
-
-    while l:i < 2
-
-        if search(a:pat,l:noCursorPos,line('.'))
-        \ == 0
-        \ &&
-        \ search(a:pat,l:cursorPos,line('.'))
-        \ == 0
-
-            if l:i == 0
-
-                let l:cursor = getpos('.')
-
-                if a:move == 'f' || a:move == ''
-
-                    call
-                    \ moveCursor#GotoColumn1('.')
-
-                elseif a:move == 'b'
-
-                    call
-                    \ moveCursor#GotoColumnEnd(
-                    \ '.')
-
-                endif
-
-            elseif l:i == 1
-
-                call setpos('.',l:cursor)
-
-                return 2
-
-            endif
-
-            let l:i = l:i + 1
-
-        else
-
-            return 1
-
-        endif
-
-    endwhile
-
-endfunction "}}}3
-
- "}}}2
 " vim: set fdm=marker fdl=20 tw=50: "}}}1
