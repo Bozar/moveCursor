@@ -1,7 +1,10 @@
 " moveCursor.vim "{{{1
-" Last Update: Apr 03, Fri | 17:58:01 | 2015
+" Last Update: Apr 09, Thu | 11:42:51 | 2015
 
-" NOTE: script variables
+" License: GPLv3
+" Author: Bozar
+
+" script variables
 " s:LineNr . [id]
 " s:PosCurrent
 " s:PosTop
@@ -12,7 +15,7 @@ function moveCursor#DetectLineNr(id,...) "{{{2
 
     if !exists(l:LineNr)
         if exists('a:1') && a:1 ># 0
-            echo 'ERROR:' . ' ' . l:LineNr .
+            echom 'ERROR:' . ' ' . l:LineNr .
             \ " doesn't exist in moveCursor.vim!"
         endif
         return 1
@@ -28,7 +31,7 @@ function moveCursor#DetectMark(id,...) "{{{2
 
     if line(l:mark) ==# 0
         if exists('a:1') && a:1 ># 0
-            echo 'ERROR: Mark' . ' ' . l:mark .
+            echom 'ERROR: Mark' . ' ' . l:mark .
             \ ' not found!'
         endif
         return 1
@@ -42,7 +45,7 @@ function moveCursor#DetectFold(...) "{{{2
 
     if foldlevel('.') <# 1
         if exists('a:1') && a:1 ># 0
-            echo 'ERROR: Fold not found!'
+            echom 'ERROR: Fold not found!'
         endif
         return 1
     else
@@ -187,4 +190,4 @@ function moveCursor#SetLineJKWhole(...) "{{{2
 
 endfunction "}}}2
 
-" vim: set fdm=marker fdl=20 tw=50: "}}}1
+" vim: set fdm=marker fdl=20 cc=50 "}}}1
