@@ -1,6 +1,7 @@
 " moveCursor.vim "{{{1
 " Last Update: Apr 09, Thu | 11:42:51 | 2015
 
+" Version: 0.7.0
 " License: GPLv3
 " Author: Bozar
 
