@@ -1,7 +1,7 @@
 " moveCursor.vim "{{{1
-" Last Update: Apr 09, Thu | 11:42:51 | 2015
+" Last Update: Apr 23, Thu | 13:16:23 | 2015
 
-" Version: 0.7.0
+" Version: 0.7.1-nightly
 " License: GPLv3
 " Author: Bozar
 
@@ -30,7 +30,10 @@ function moveCursor#DetectMark(id,...) "{{{2
 
     let l:mark = "'" . a:id
 
-    if line(l:mark) ==# 0
+    if line(l:mark) <# 1 ||
+    \ line(l:mark) <# 1 ||
+    \ line(l:mark) ># line('$') ||
+    \ line(l:mark) ># line('$')
         if exists('a:1') && a:1 ># 0
             echom 'ERROR: Mark' . ' ' . l:mark .
             \ ' not found!'
@@ -39,6 +42,17 @@ function moveCursor#DetectMark(id,...) "{{{2
     else
         return 2
     endif
+
+    " try & catch will move to the specific mark,
+    " which might cause trouble
+
+    "try
+    "    '<
+    "    catch /\v^Vim%(\(\a+\))=:(E19|E20)/
+    "    echom 'error'
+    "    return 1
+    "endtry
+    "return 2
 
 endfunction "}}}2
 
